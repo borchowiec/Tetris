@@ -13,15 +13,53 @@ body {
 
 .block {
     display: inline-grid;
-    background: #1f1f1f;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    border-color: #272727;
     border-width: 4px;
     border-style: outset;
     width: 30px;
     height: 30px;
+}
+
+.black {
+    background: #1f1f1f;
+    border-color: #272727;
+}
+
+.yellow {
+    background: #fae100;
+    border-color: #ffe600;
+}
+
+.red {
+    background: #ca0b00;
+    border-color: #f20b00;
+}
+
+.orange {
+    background: #ce7000;
+    border-color: #f28a00;
+}
+
+.purple {
+    background: #780de3;
+    border-color: #900dff;
+}
+
+.pink {
+    background: #d6016a;
+    border-color: #ff0181;
+}
+
+.blue {
+    background: #32c1d6;
+    border-color: #32dbf0;
+}
+
+.dark-blue {
+    background: #0013d6;
+    border-color: #0015ff;
 }
 
 .right-panel {
