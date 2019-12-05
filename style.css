@@ -1,12 +1,13 @@
 body {
     background: #272727;
+    font-family: 'VT323', monospace;
 }
 
 .board {
+    display: inline-block;
     border-color: #b0b0b0;
     border-width: 5px;
     border-style: outset;
-    margin: auto;
     width: 300px;
 }
 
@@ -21,4 +22,36 @@ body {
     border-style: outset;
     width: 30px;
     height: 30px;
+}
+
+.right-panel {
+    display: inline-block;
+    position: relative;
+    bottom: 450px;
+}
+
+.next-block-panel {
+    border-color: #b0b0b0;
+    border-width: 5px;
+    border-style: outset;
+    width: 120px;
+}
+
+.next-lvl {
+    width: 100%;
+    background: #b0b0b0;
+    color: #272727;
+    font-size: 25px;
+}
+
+.points {
+    width: 100%;
+    background: #272727;
+    color: #900DFF;
+    font-size: 25px;
+}
+
+.container {
+    width: 450px;
+    margin: auto;
 }
