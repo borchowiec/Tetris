@@ -1,0 +1,24 @@
+body {
+    background: #272727;
+}
+
+.board {
+    border-color: #b0b0b0;
+    border-width: 5px;
+    border-style: outset;
+    margin: auto;
+    width: 300px;
+}
+
+.block {
+    display: inline-grid;
+    background: #1f1f1f;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-color: #272727;
+    border-width: 4px;
+    border-style: outset;
+    width: 30px;
+    height: 30px;
+}
