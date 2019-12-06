@@ -107,7 +107,7 @@ function rotateBlock() {
     }
 
     //move up if its to low
-    let difference = copy.reduce((min, p) =>p.posY < min ? p.posY : min, copy[0].posY) - minY;
+    let difference = copy.reduce((max, p) =>p.posY > max ? p.posY : max, copy[0].posY) - maxY;
     if (difference !== 0) {
         for (let i = 0; i < copy.length; i++) copy[i].posY -= difference;
     }
@@ -121,8 +121,6 @@ function rotateBlock() {
     else if (minX < 0) {
         for (let i = 0; i < copy.length; i++) copy[i].posX -= minX;
     }
-
-
 
     currentBlock = copy;
 
