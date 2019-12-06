@@ -86,6 +86,48 @@ function moveCurrentBlock(dirX, dirY) {
     return collide;
 }
 
+function rotateBlock() {
+    //counting center block
+    let maxX = currentBlock.reduce((max, p) => p.posX > max ? p.posX : max, currentBlock[0].posX);
+    let minX = currentBlock.reduce((min, p) => p.posX < min ? p.posX : min, currentBlock[0].posX);
+    let maxY = currentBlock.reduce((max, p) =>p.posY > max ? p.posY : max, currentBlock[0].posY);
+    let minY = currentBlock.reduce((min, p) =>p.posY < min ? p.posY : min, currentBlock[0].posY);
+
+    const centerX = Math.round((maxX + minX) / 2);
+    const centerY = Math.round((maxY + minY) / 2);
+
+    //rotating
+    let copy = JSON.parse(JSON.stringify(currentBlock));
+    for (let i = 0; i < copy.length; i++) {
+        let tX = copy[i].posX;
+        let tY = copy[i].posY;
+
+        copy[i].posX = centerX + tY - centerY;
+        copy[i].posY = centerY + centerX - tX;
+    }
+
+    //move up if its to low
+    let difference = copy.reduce((min, p) =>p.posY < min ? p.posY : min, copy[0].posY) - minY;
+    if (difference !== 0) {
+        for (let i = 0; i < copy.length; i++) copy[i].posY -= difference;
+    }
+
+    //wall collision
+    maxX = copy.reduce((max, p) => p.posX > max ? p.posX : max, copy[0].posX);
+    minX = copy.reduce((min, p) => p.posX < min ? p.posX : min, copy[0].posX);
+    if (maxX >= WIDTH) {
+        for (let i = 0; i < copy.length; i++) copy[i].posX -= maxX - WIDTH + 1;
+    }
+    else if (minX < 0) {
+        for (let i = 0; i < copy.length; i++) copy[i].posX -= minX;
+    }
+
+
+
+    currentBlock = copy;
+
+}
+
 function controlBlock(key) {
     if (key.code === "ArrowLeft") {
         moveCurrentBlock(-1, 0);
@@ -97,6 +139,10 @@ function controlBlock(key) {
     }
     else if (key.code === "ArrowDown") {
         moveCurrentBlock(0, 1);
+        refreshBoard();
+    }
+    else if (key.code === "ArrowUp") {
+        rotateBlock();
         refreshBoard();
     }
 }
