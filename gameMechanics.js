@@ -1,0 +1,106 @@
+/**
+ * This function initialize key listener.
+ */
+function initListeners() {
+    document.addEventListener('keydown', controlBlock, false);
+}
+
+/**
+ * This function moves block in specific direction.
+ * @param dirX Direction x.
+ * @param dirY Direction y.
+ * @returns {boolean} True if block collide with something and can't be moved.
+ */
+function moveCurrentBlock(dirX, dirY) {
+    let collide = false;
+    let copy = JSON.parse(JSON.stringify(currentBlock));
+    for (let i = 0; i < copy.length; i++) {
+        copy[i].posX += dirX;
+        if (copy[i].posX < 0 || copy[i].posX >= WIDTH) {
+            collide = true;
+            break;
+        }
+        copy[i].posY += dirY;
+        if (copy[i].posY >= HEIGHT) {
+            collide = true;
+            break;
+        }
+
+        let x = copy[i].posX;
+        let y = copy[i].posY;
+        if ( y >= 0 && boardElements[x][y].occupied) {
+            collide = true;
+            break;
+        }
+    }
+
+    if (!collide) currentBlock = copy;
+
+    return collide;
+}
+
+/**
+ * This function rotates current block.
+ */
+function rotateBlock() {
+    //counting center block
+    let maxX = currentBlock.reduce((max, p) => p.posX > max ? p.posX : max, currentBlock[0].posX);
+    let minX = currentBlock.reduce((min, p) => p.posX < min ? p.posX : min, currentBlock[0].posX);
+    let maxY = currentBlock.reduce((max, p) =>p.posY > max ? p.posY : max, currentBlock[0].posY);
+    let minY = currentBlock.reduce((min, p) =>p.posY < min ? p.posY : min, currentBlock[0].posY);
+
+    const centerX = Math.round((maxX + minX) / 2);
+    const centerY = Math.round((maxY + minY) / 2);
+
+    //rotating
+    let copy = JSON.parse(JSON.stringify(currentBlock));
+    for (let i = 0; i < copy.length; i++) {
+        let tX = copy[i].posX;
+        let tY = copy[i].posY;
+
+        copy[i].posX = centerX + tY - centerY;
+        copy[i].posY = centerY + centerX - tX;
+    }
+
+    //move up if its to low
+    let difference = copy.reduce((max, p) =>p.posY > max ? p.posY : max, copy[0].posY) - maxY;
+    if (difference !== 0) {
+        for (let i = 0; i < copy.length; i++) copy[i].posY -= difference;
+    }
+
+    //wall collision
+    maxX = copy.reduce((max, p) => p.posX > max ? p.posX : max, copy[0].posX);
+    minX = copy.reduce((min, p) => p.posX < min ? p.posX : min, copy[0].posX);
+    if (maxX >= WIDTH) {
+        for (let i = 0; i < copy.length; i++) copy[i].posX -= maxX - WIDTH + 1;
+    }
+    else if (minX < 0) {
+        for (let i = 0; i < copy.length; i++) copy[i].posX -= minX;
+    }
+
+    currentBlock = copy;
+
+}
+
+/**
+ * This function controls current block.
+ * @param key Key that was pressed.
+ */
+function controlBlock(key) {
+    if (key.code === "ArrowLeft") {
+        moveCurrentBlock(-1, 0);
+        refreshBoard();
+    }
+    else if (key.code === "ArrowRight") {
+        moveCurrentBlock(1, 0);
+        refreshBoard();
+    }
+    else if (key.code === "ArrowDown") {
+        moveCurrentBlock(0, 1);
+        refreshBoard();
+    }
+    else if (key.code === "ArrowUp") {
+        rotateBlock();
+        refreshBoard();
+    }
+}
