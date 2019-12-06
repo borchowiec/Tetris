@@ -43,6 +43,10 @@ function initNextBlockPanel() {
     }
 }
 
+function initListeners() {
+    document.addEventListener('keydown', controlBlock, false);
+}
+
 function refreshBoard() {
     for (let i = 0; i < HEIGHT; i++) {
         for (let j = 0; j < WIDTH; j++) {
@@ -62,18 +66,47 @@ function refreshBoard() {
 }
 
 function moveCurrentBlock(dirX, dirY) {
-    for (let i = 0; i < currentBlock.length; i++) {
-        currentBlock[i].posX += dirX;
-        currentBlock[i].posY += dirY;
+    let collide = false;
+    let copy = JSON.parse(JSON.stringify(currentBlock));
+    for (let i = 0; i < copy.length; i++) {
+        copy[i].posX += dirX;
+        if (copy[i].posX < 0 || copy[i].posX >= WIDTH) {
+            collide = true;
+            break;
+        }
+        copy[i].posY += dirY;
+        if (copy[i].posY >= HEIGHT) {
+            collide = true;
+            break;
+        }
+    }
+
+    if (!collide) currentBlock = copy;
+
+    return collide;
+}
+
+function controlBlock(key) {
+    if (key.code === "ArrowLeft") {
+        moveCurrentBlock(-1, 0);
+        refreshBoard();
+    }
+    else if (key.code === "ArrowRight") {
+        moveCurrentBlock(1, 0);
+        refreshBoard();
+    }
+    else if (key.code === "ArrowDown") {
+        moveCurrentBlock(0, 1);
+        refreshBoard();
     }
 }
 
 window.onload = function() {
     initBoard();
     initNextBlockPanel();
+    initListeners();
 
     currentBlock = getRandomBlock();
-
     refreshBoard();
 
         setInterval(function ()
@@ -82,4 +115,3 @@ window.onload = function() {
             refreshBoard();
         }, 1000);
 };
-
