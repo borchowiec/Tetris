@@ -5,6 +5,7 @@ let boardElements;
 let nextBlockDisplayElements;
 
 let currentBlock;
+let nextBlock;
 
 function initBoard() {
     let board = document.querySelector(".board");
@@ -19,10 +20,13 @@ function initBoard() {
             let node = document.createElement("div");
             node.setAttribute("class", "block black");
             board.append(node);
-            boardElements[j][i] = node;
+            boardElements[j][i] = {
+                node : node,
+                color : "black",
+                occupied : false
+            };
         }
     }
-
 }
 
 function initNextBlockPanel() {
@@ -50,7 +54,8 @@ function initListeners() {
 function refreshBoard() {
     for (let i = 0; i < HEIGHT; i++) {
         for (let j = 0; j < WIDTH; j++) {
-            boardElements[j][i].setAttribute("class", "block black");
+            let color = boardElements[j][i].color;
+            boardElements[j][i].node.setAttribute("class", "block " + color);
         }
     }
 
@@ -60,8 +65,23 @@ function refreshBoard() {
         let color = currentBlock[i].color;
 
         if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-            boardElements[x][y].setAttribute("class", "block " + color);
+            boardElements[x][y].node.setAttribute("class", "block " + color);
         }
+    }
+}
+
+function refreshNextBlockDisplay() {
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            nextBlockDisplayElements[i][j].setAttribute("class", "block black");
+        }
+    }
+
+    for (let i = 0; i < nextBlock.length; i++) {
+        let x = nextBlock[i].posX;
+        let y = nextBlock[i].posY;
+        let color = nextBlock[i].color;
+        nextBlockDisplayElements[x][y].setAttribute("class", "block " + color);
     }
 }
 
@@ -76,6 +96,13 @@ function moveCurrentBlock(dirX, dirY) {
         }
         copy[i].posY += dirY;
         if (copy[i].posY >= HEIGHT) {
+            collide = true;
+            break;
+        }
+
+        let x = copy[i].posX;
+        let y = copy[i].posY;
+        if ( y >= 0 && boardElements[x][y].occupied) {
             collide = true;
             break;
         }
@@ -145,17 +172,57 @@ function controlBlock(key) {
     }
 }
 
+function putBlockToBoard(singleBlock) {
+    let x = singleBlock.posX;
+    let y = singleBlock.posY;
+    let color = singleBlock.color;
+
+    if (y < 0) {
+        return true;
+    }
+
+    boardElements[x][y].node.setAttribute("class", "block " + color);
+    boardElements[x][y].color = color;
+    boardElements[x][y].occupied = true;
+
+    return false;
+}
+
+function setCurrentBlock() {
+    currentBlock = nextBlock;
+    moveCurrentBlock(3, -3)
+}
+
 window.onload = function() {
     initBoard();
     initNextBlockPanel();
     initListeners();
 
-    currentBlock = getRandomBlock();
-    refreshBoard();
+    nextBlock = getRandomBlock();
+    setCurrentBlock();
+    nextBlock = getRandomBlock();
 
+    refreshBoard();
+    refreshNextBlockDisplay();
+
+        let touchedFloor;
         setInterval(function ()
         {
-            moveCurrentBlock(0, 1);
+            touchedFloor = moveCurrentBlock(0, 1);
+
+            if (touchedFloor) {
+                for (let i = 0; i < currentBlock.length; i++) {
+                    if (putBlockToBoard(currentBlock[i])) {
+                        console.log("game over"); //todo game over
+                    }
+                }
+
+                setCurrentBlock();
+                nextBlock = getRandomBlock();
+                refreshNextBlockDisplay();
+            }
+
             refreshBoard();
+
         }, 1000);
 };
