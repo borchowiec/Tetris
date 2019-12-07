@@ -20,6 +20,15 @@ let boardElements;
  */
 let nextBlockDisplayElements;
 
+/**
+ * This element displays points.
+ */
+let pointsSpan;
+
+/**
+ * This element display current level.
+ */
+let lvlSpan;
 
 /**
  * This method initialize main board.
@@ -72,6 +81,14 @@ function initNextBlockPanel() {
 }
 
 /**
+ * Initialize elements that displays information about game.
+ */
+function initInfo() {
+    pointsSpan = document.getElementById("points");
+    lvlSpan = document.getElementById("lvl");
+}
+
+/**
  * Refreshes board. "Repaints" main board.
  */
 function refreshBoard() {
@@ -112,6 +129,21 @@ function refreshNextBlockDisplay() {
 }
 
 /**
+ * This function puts displays information about game.
+ * @param points Amount of points.
+ * @param lvl Level
+ */
+function setInfo(points, lvl) {
+    console.log(points);
+    console.log(lvl);
+
+    console.log(pointsSpan);
+
+    pointsSpan.textContent = points;
+    lvlSpan.textContent = lvl;
+}
+
+/**
  * This method puts block to the board. After this, this single block will be colliding with controllable blocks.
  * @param singleBlock Single block that will be put to board.
  * @returns {boolean} True, if block is higher than board. You can detect when player lost.
@@ -130,4 +162,38 @@ function putBlockToBoard(singleBlock) {
     boardElements[x][y].occupied = true;
 
     return false;
+}
+
+/**
+ * This function checks if there is some lines that can be removed. Returns amount of removed lines.
+ * @returns {number} Amount of removed lines.
+ */
+function removeLines() {
+
+    let removedLines = 0;
+
+    for (let y = 0; y < HEIGHT; y++) {
+        let temp = 0;
+        for (let x = 0; x < WIDTH; x++) {
+            if (boardElements[x][y].occupied) temp++;
+            else break;
+        }
+
+        if (temp === WIDTH) {
+            removedLines++;
+            for (let aX = 0; aX < WIDTH; aX++) {
+                for (let aY = y; aY >= 1; aY--) {
+                    boardElements[aX][aY].color = boardElements[aX][aY - 1].color;
+                    boardElements[aX][aY].occupied = boardElements[aX][aY - 1].occupied;
+                }
+            }
+
+            for (let aX = 0; aX < WIDTH; aX++) {
+                    boardElements[aX][0].color = "black";
+                    boardElements[aX][0].occupied = false;
+            }
+        }
+    }
+
+    return removedLines;
 }

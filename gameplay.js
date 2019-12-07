@@ -1,6 +1,9 @@
 let currentBlock;
 let nextBlock;
 
+let points = 0;
+let lvl = 1;
+
 /**
  * This function puts next block to the board. Next block is current block.
  */
@@ -17,6 +20,8 @@ window.onload = function() {
     initBoard();
     initNextBlockPanel();
     initListeners();
+    initInfo();
+
 
     //setting up blocks
     nextBlock = getRandomBlock();
@@ -26,9 +31,11 @@ window.onload = function() {
     //refreshing boards
     refreshBoard();
     refreshNextBlockDisplay();
+    setInfo(points, lvl);
 
     //main loop
     let touchedFloor;
+    let removedLines;
     setInterval(function ()
     {
         touchedFloor = moveCurrentBlock(0, 1);
@@ -39,6 +46,10 @@ window.onload = function() {
                     console.log("game over"); //todo game over
                 }
             }
+
+            removedLines = removeLines();
+            points += removedLines * removedLines * lvl;
+            setInfo(points, lvl);
 
             setCurrentBlock();
             nextBlock = getRandomBlock();
