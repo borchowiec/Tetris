@@ -1,3 +1,8 @@
+let points = 0;
+let lvl = 1;
+
+let gameLoop;
+
 /**
  * This function initialize key listener.
  */
@@ -116,4 +121,108 @@ function controlBlock(key) {
         rotateBlock();
         refreshBoard();
     }
+}
+
+/**
+ * This function handle game over.
+ */
+function gameOver() {
+    clearInterval(gameLoop);
+    showGameOverPanel(points);
+    currentBlock = [];
+}
+
+/**
+ * This function resets main loop.
+ */
+function resetMainLoop() {
+    clearInterval(gameLoop);
+    gameLoop = setInterval(function () {
+        let touchedFloor;
+        let removedLines;
+        let nextLvl = false;
+        touchedFloor = moveCurrentBlock(0, 1);
+
+        if (touchedFloor) {
+            for (let i = 0; i < currentBlock.length; i++) {
+                if (putBlockToBoard(currentBlock[i])) {
+                    gameOver();
+                }
+            }
+
+            removedLines = removeLines();
+            points += removedLines * removedLines * lvl;
+            setInfo(points, lvl);
+
+            setCurrentBlock();
+            nextBlock = getRandomBlock();
+            refreshNextBlockDisplay();
+
+            //check if lvl can be increased
+            switch (lvl) {
+                case 1:
+                    if (points > 50) {
+                        lvl = 2;
+                        nextLvl = true;
+                    }
+                    break;
+                case 2:
+                    if (points > 150) {
+                        lvl = 3;
+                        nextLvl = true;
+                    }
+                    break;
+                case 3:
+                    if (points > 300) {
+                        lvl = 4;
+                        nextLvl = true;
+                    }
+                    break;
+                case 4:
+                    if (points > 500) {
+                        lvl = 5;
+                        nextLvl = true;
+                    }
+                    break;
+                case 5:
+                    if (points > 750) {
+                        lvl = 6;
+                        nextLvl = true;
+                    }
+                    break;
+                case 6:
+                    if (points > 1050) {
+                        lvl = 7;
+                        nextLvl = true;
+                    }
+                    break;
+                case 7:
+                    if (points > 1500) {
+                        lvl = 8;
+                        nextLvl = true;
+                    }
+                    break;
+                case 8:
+                    if (points > 1900) {
+                        lvl = 9;
+                        nextLvl = true;
+                    }
+                    break;
+                case 9:
+                    if (points > 2350) {
+                        lvl = 10;
+                        nextLvl = true;
+                    }
+                    break;
+            }
+        }
+
+        refreshBoard();
+
+        if (nextLvl) {
+            setInfo(points, lvl);
+            resetMainLoop();
+        }
+
+    }, 1100 - (100 * lvl));
 }
