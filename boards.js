@@ -134,11 +134,6 @@ function refreshNextBlockDisplay() {
  * @param lvl Level
  */
 function setInfo(points, lvl) {
-    console.log(points);
-    console.log(lvl);
-
-    console.log(pointsSpan);
-
     pointsSpan.textContent = points;
     lvlSpan.textContent = lvl;
 }

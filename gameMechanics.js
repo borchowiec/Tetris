@@ -78,7 +78,20 @@ function rotateBlock() {
         for (let i = 0; i < copy.length; i++) copy[i].posX -= minX;
     }
 
-    currentBlock = copy;
+    //other block collision
+    let collide = false;
+    for (let i = 0; i < copy.length; i++) {
+        let x = copy[i].posX;
+        let y = copy[i].posY;
+
+        if ( y >= 0 && boardElements[x][y].occupied ) {
+            collide = true;
+            break;
+        }
+    }
+
+    //if doesn't collide with other blocks
+    if (!collide) currentBlock = copy;
 
 }
 
