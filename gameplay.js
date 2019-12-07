@@ -4,12 +4,21 @@ let nextBlock;
 let points = 0;
 let lvl = 1;
 
+let gameLoop;
+
 /**
  * This function puts next block to the board. Next block is current block.
  */
 function setCurrentBlock() {
     currentBlock = nextBlock;
-    moveCurrentBlock(3, -3)
+    let collide = moveCurrentBlock(3, -3)
+    if (collide) gameOver();
+}
+
+function gameOver() {
+    clearInterval(gameLoop);
+    showGameOverPanel(points);
+    currentBlock = [];
 }
 
 /**
@@ -34,16 +43,15 @@ window.onload = function() {
     setInfo(points, lvl);
 
     //main loop
-    let touchedFloor;
-    let removedLines;
-    setInterval(function ()
-    {
+    gameLoop = setInterval(function () {
+        let touchedFloor;
+        let removedLines;
         touchedFloor = moveCurrentBlock(0, 1);
 
         if (touchedFloor) {
             for (let i = 0; i < currentBlock.length; i++) {
                 if (putBlockToBoard(currentBlock[i])) {
-                    console.log("game over"); //todo game over
+                    gameOver();
                 }
             }
 

@@ -93,3 +93,26 @@ body {
     width: 450px;
     margin: auto;
 }
+
+.game-over-panel {
+    display: none;
+    text-align: center;
+    background: #1f1f1f;
+    border-color: #f20b00;
+    border-width: 5px;
+    border-style: outset;
+    width: 400px;
+    font-size: 48px;
+    position: relative;
+    left: -50%;
+    top: 40px;
+    z-index: 100;
+}
+
+.game-over-panel h2 {
+    color: #ca0b00;
+}
+
+.game-over-panel h3 {
+    color: #780de3;
+}

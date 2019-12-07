@@ -31,6 +31,16 @@ let pointsSpan;
 let lvlSpan;
 
 /**
+ * Panel that shows final results.
+ */
+let gameOverPanel;
+
+/**
+ * Span that contains final amount of points.
+ */
+let earnedPoints;
+
+/**
  * This method initialize main board.
  */
 function initBoard() {
@@ -86,6 +96,9 @@ function initNextBlockPanel() {
 function initInfo() {
     pointsSpan = document.getElementById("points");
     lvlSpan = document.getElementById("lvl");
+    gameOverPanel = document.querySelector(".game-over-panel");
+    earnedPoints = document.getElementById("earned-points");
+
 }
 
 /**
@@ -191,4 +204,12 @@ function removeLines() {
     }
 
     return removedLines;
+}
+
+/**
+ * This function displays final panel with results.
+ */
+function showGameOverPanel(points) {
+    earnedPoints.textContent = points;
+    gameOverPanel.style.display = "block";
 }
